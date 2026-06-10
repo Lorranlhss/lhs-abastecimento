@@ -149,20 +149,19 @@ const GPSCard = ({ gps, gpsStatus, onCapturar }) => {
   );
 };
 
-// ── OCR Hodômetro via Anthropic API ───────────────────────────────────────
+// ── OCR Hodômetro via proxy serverless ───────────────────────────────────
 async function lerKMporIA(base64Image) {
   const imageData = base64Image.split(",")[1];
   const mediaType = base64Image.split(";")[0].split(":")[1] || "image/jpeg";
- 
   const response = await fetch("/api/ocr", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ imageData, mediaType }),
   });
- 
   const data = await response.json();
   const numero = parseInt(data.km, 10);
   return isNaN(numero) || numero === 0 ? null : numero;
+}
 
 // ── Foto Hodômetro com IA ─────────────────────────────────────────────────
 const FotoHodometroIA = ({ preview, onCapture, onKmLido, kmLido }) => {
